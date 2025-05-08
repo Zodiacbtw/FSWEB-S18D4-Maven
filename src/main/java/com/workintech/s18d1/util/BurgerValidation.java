@@ -1,26 +1,25 @@
 package com.workintech.s18d1.util;
 
 import com.workintech.s18d1.entity.Burger;
-import com.workintech.s18d1.exceptions.BurgerException;
+import com.workintech.s18d1.exceptions.BurgerErrorException;
 import org.springframework.http.HttpStatus;
 
 public class BurgerValidation {
-
     public static void validateBurger(Burger burger) {
-        if (burger == null) {
-            throw new BurgerException("Burger cannot be null", HttpStatus.BAD_REQUEST);
-        }
-        
-        if (burger.getName() == null || burger.getName().trim().isEmpty()) {
-            throw new BurgerException("Burger name cannot be empty", HttpStatus.BAD_REQUEST);
-        }
-        
-        if (burger.getPrice() <= 0) {
-            throw new BurgerException("Burger price must be greater than 0", HttpStatus.BAD_REQUEST);
-        }
-        
-        if (burger.getBreadType() == null) {
-            throw new BurgerException("Bread type must be specified", HttpStatus.BAD_REQUEST);
+        boolean isNameValid = burger.getName() != null;
+        boolean isIdValid = burger.getIsVegan() != null;
+        boolean isBreadTypeValid = burger.getBreadType() != null;
+        boolean isPriceValid = burger.getPrice() != null;
+        boolean isContentValid = burger.getIsVegan() != null;
+
+        if (!isNameValid || !isIdValid || !isContentValid || !isBreadTypeValid || !isPriceValid) {
+            throw new BurgerErrorException(
+                    !isIdValid ? "Id cannot be empty" :
+                    !isNameValid ? "Name cannot be empty" :
+                    !isBreadTypeValid ? "Bread type cannot be empty" :
+                    !isContentValid ? "Content cannot be empty" :
+                    !isPriceValid ? "Price cannot be empty" : "Something went wrong"
+                    , HttpStatus.BAD_REQUEST);
         }
     }
-} 
+}
